@@ -1,15 +1,13 @@
 package model
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/fogleman/gg"
+	"strings"
 )
 
 const defaultImage = "res/poop.png"
 const defaultFont = "res/Final.ttf"
-const defaultSize = 50
+const defaultSize = 40
 
 //Xmansay struct holds an image and a font and text to represent a message
 type Xmansay struct {
@@ -37,11 +35,11 @@ func NewXManSay(text, image, font string, size float64) *Xmansay {
 //DrawMan clearly draws an xman Context, with x prefrences
 func (x *Xmansay) DrawMan() (*gg.Context, error) {
 	img, err := gg.LoadPNG(x.image)
-	imgWidth := float64(img.Bounds().Dx())
-	imgHeight := float64(img.Bounds().Dy())
 	if err != nil {
 		return nil, err
 	}
+	imgWidth := float64(img.Bounds().Dx())
+	imgHeight := float64(img.Bounds().Dy())
 	//init Context
 	c := gg.NewContext(int(imgWidth*1.7), int(imgHeight*1.5))
 	err = c.LoadFontFace(x.font, x.size)
@@ -57,10 +55,9 @@ func (x *Xmansay) DrawMan() (*gg.Context, error) {
 	// if textHeight is greater than 0.5 * image height then some of the text is gonna overlap
 	// to avoid it we move the dialouge down
 	var dialougePosY float64
-	dialougePosY = 0.5*imgHeight - 30
+	dialougePosY = 30
 	if textHeight > 0.5*imgHeight {
-		fmt.Println("fssfdjk")
-		dialougePosY = (textHeight - (0.5 * imgHeight)) + 0.5*imgHeight
+		dialougePosY += textHeight - (0.5 * imgHeight)
 	}
 	x.text = strings.ReplaceAll(x.text, "\n", " ")
 	//Draw Dialouge box
