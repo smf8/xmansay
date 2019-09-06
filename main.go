@@ -58,6 +58,7 @@ func main() {
 	} else {
 		man = model.NewXManSay(util.Reverse(util.ToGlyph(xManSay[0])), xManImg, xManFont, float64(xManSaySize))
 	}
+	fmt.Println(util.Reverse(util.ToGlyph(xManSay[0])), util.CheckIsEnglish(xManSay[0]))
 	c, err := man.DrawMan()
 	if err != nil {
 		log.Fatal(err)

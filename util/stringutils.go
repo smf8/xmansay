@@ -2,6 +2,8 @@
 // Package goarabic contains utility functions for working with Arabic strings.
 package util
 
+import "regexp"
+
 // Reverse returns its argument string reversed rune-wise left to right.
 func Reverse(s string) string {
 	r := []rune(s)
@@ -191,10 +193,9 @@ func ToGlyph(text string) string {
 	return string(newText)
 }
 func CheckIsEnglish(text string) bool {
-	for _, r := range text {
-		if (r < 'a' || r > 'z') && (r < 'A' || r > 'Z') {
-			return false
-		}
+	regex, err := regexp.Compile("[a-zA-Z]")
+	if err != nil {
+		panic(err)
 	}
-	return true
+	return regex.MatchString(text)
 }
