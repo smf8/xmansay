@@ -11,3 +11,6 @@ don't forget to copy `res` folder to the generated `deploy` folder
 <img src="./demo.gif" width="100%">
 
 as there is no official API for rendering persian texts in go [#27281](https://github.com/golang/go/issues/27281), multiline farsi texts are not rendered correctly in this project.
+
+
+farsi text available because of [goarabic](https://github.com/01walid/goarabic)
