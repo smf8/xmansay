@@ -1,11 +1,39 @@
 
-# xmansay
-a poor duplicate of xcowsay 
+##### xmansay
+a poor duplicate of xcowsay.
+it just display a poor **being** with a bubble of whatever you told it to say :)
 
-for usage you can `go get` the project for **but keep in mind that xmansay uses [qt binding for go](https://github.com/therecipe/qt)
-so it might take a long time to build**.
-and for building desired output for your enviroment use `qtdeploy build [linux/windwos/etc]`
+## Usage: 
+
+`go get github.com/smf8/xmansay` 
+
+**don't worry, because of [qt binding for go](https://github.com/therecipe/qt) it might take sometime to download project**
+
+for building desired output for your enviroment use `qtdeploy build [linux/windwos/etc]`
 don't forget to copy `res` folder to the generated `deploy` folder
+
+#### If you want to use it with cron:
+
+- create a link to original executable file inside one of `PATH` addresses.
+
+- add these lines to your `~/.profile` to save `$DISPLAY` and `$XAUTHORITY` on each login. [ref](https://unix.stackexchange.com/a/10126)
+
+  ```shell
+  case $DISPLAY in                                                                                                                                                                   
+  :*) export | grep -E '(^| )(DISPLAY|XAUTHORITY)=' | cut -d = -f 2 > ~/.local-display-setup.sh;;                                                                                                              
+  esac  
+  ```
+
+- (Optional) create a file of sentences you want `xmansay` to say.
+
+- add this to your crontab
+
+  ```shell
+  */10 * * * * export XAUTHORITY=$(tail -n 1 ~/.local-display-setup.sh) && export DISPLAY=$(head -n 1 ~/.local-display-setup.sh) && shuf -n 1 /path/to/sentences/list/sentences.txt | xmansay -time 10
+  
+  ```
+
+------
 
 **Demo:**
 <img src="./demo.gif" width="100%">
