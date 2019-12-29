@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"flag"
 	"fmt"
@@ -10,7 +11,10 @@ import (
 	"image/png"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -18,8 +22,12 @@ func main() {
 	var xManImg, xManFont string
 	var xManSaySize int
 	var duration int
+
+	ex, _ := os.Executable()
+	dr := filepath.Dir(ex)
+	//fmt.Println(dir)
 	// check if res folder is available for default resources
-	f, _ := ioutil.ReadDir("./")
+	f, _ := ioutil.ReadDir(dr)
 	bo := false
 	for _, dir := range f {
 		if dir.Name() == "res" {
@@ -30,7 +38,7 @@ func main() {
 		fmt.Println("Please obtain res folder and place it in root folder beside", os.Args[0])
 		os.Exit(1)
 	}
-	flag.StringVar(&xManImg, "image", "", "/path/to/image (image must have a transparent background) default is poop")
+	flag.StringVar(&xManImg, "image", "", "/path/to/image (image must have a transparent background) default is a random image")
 	flag.StringVar(&xManFont, "font", "", "/path/to/ttf-font default is Roboto & IranSans5")
 	flag.IntVar(&xManSaySize, "size", 0, "font size, default value is 50, recommended value is depended on screen resolution")
 	flag.IntVar(&duration, "time", 5, "the duration which the man stays, default is 5, don't use more than 15")
@@ -40,8 +48,13 @@ func main() {
 		fmt.Fprintf(flag.CommandLine.Output(), "\\twrite XManSay text wrapped in \" \" after all flags\n")
 	}
 	flag.Parse()
-	xManSay := flag.Args()
-	if len(xManSay) != 1 {
+	scanner := bufio.NewScanner(os.Stdin)
+	strBuilder := &strings.Builder{}
+	for scanner.Scan() {
+		strBuilder.WriteString(scanner.Text())
+	}
+	xManSay := strBuilder.String()
+	if xManSay == "" {
 		fmt.Println("Incorrect usage, for usage do ./main -h")
 		os.Exit(1)
 	}
@@ -49,16 +62,27 @@ func main() {
 		fmt.Println("Duration must be lower than 15. For usage check", os.Args[0], "-h")
 		os.Exit(1)
 	}
-
+	if xManImg == "" {
+		resFiles, err := filepath.Glob(dr + "/res/*.png")
+		if err != nil {
+			panic(err)
+		}
+		rand.Seed(time.Now().UnixNano())
+		xManImg = resFiles[rand.Intn(len(resFiles))]
+	}
+	// Setting default font value
+	if xManFont == "" {
+		xManFont = dr + "/res/Final.ttf"
+	}
 	//handling Arabic / Persian text
 	var man *model.Xmansay
-	if util.CheckIsEnglish(xManSay[0]) {
+	if util.CheckIsEnglish(xManSay) {
 		// text is Not Persian
-		man = model.NewXManSay(xManSay[0], xManImg, xManFont, float64(xManSaySize))
+		man = model.NewXManSay(xManSay, xManImg, xManFont, float64(xManSaySize))
 	} else {
-		man = model.NewXManSay(util.Reverse(util.ToGlyph(xManSay[0])), xManImg, xManFont, float64(xManSaySize))
+		man = model.NewXManSay(util.Reverse(util.ToGlyph(xManSay)), xManImg, xManFont, float64(xManSaySize))
 	}
-	fmt.Println(util.Reverse(util.ToGlyph(xManSay[0])), util.CheckIsEnglish(xManSay[0]))
+	fmt.Println(util.Reverse(util.ToGlyph(xManSay)), util.CheckIsEnglish(xManSay))
 	c, err := man.DrawMan()
 	if err != nil {
 		log.Fatal(err)

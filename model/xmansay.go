@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-const defaultImage = "res/poop.png"
-const defaultFont = "res/Final.ttf"
 const defaultSize = 40
 
 //Xmansay struct holds an image and a font and text to represent a message
@@ -20,12 +18,7 @@ type Xmansay struct {
 //NewXManSay creates a new xmansay instance
 //defalut values are : image: poop, font: Roboto, size: 50
 func NewXManSay(text, image, font string, size float64) *Xmansay {
-	if image == "" {
-		image = defaultImage
-	}
-	if font == "" {
-		font = defaultFont
-	}
+
 	if size <= 0 {
 		size = defaultSize
 	}
