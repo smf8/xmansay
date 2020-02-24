@@ -5,6 +5,8 @@ it just display a poor **being** with a bubble of whatever you told it to say :)
 
 ## Usage: 
 
+first [install qt bindings](https://github.com/therecipe/qt/wiki/Installation) completely. (you can skip the build process and deploy your application with therecipe/qt [docker containers](https://github.com/therecipe/qt/wiki/Deploying-Application))
+
 `go get github.com/smf8/xmansay` 
 
 **don't worry, because of [qt binding for go](https://github.com/therecipe/qt) it might take sometime to download project**
